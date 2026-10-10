@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <AssemblyName>RemoveFirstOfficerRequirement</AssemblyName>
+    <Product>Remove First Officer Requirement</Product>
+    <Version>1.0.0</Version>
+    <LangVersion>latest</LangVersion>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <RootNamespace>RemoveFirstOfficerRequirement</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+
+    <Reference Include="BepInEx">
+      <HintPath>E:\SteamLibrary\steamapps\common\Sailwind\BepInEx\core\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>E:\SteamLibrary\steamapps\common\Sailwind\BepInEx\core\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>E:\SteamLibrary\steamapps\common\Sailwind\Sailwind_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\Sailwind\Sailwind_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="CreatePluginZip" AfterTargets="Build">
+    <PropertyGroup>
+      <_PluginZipStagingDirectory>$(IntermediateOutputPath)plugin-zip</_PluginZipStagingDirectory>
+      <_PluginZipContentDirectory>$(_PluginZipStagingDirectory)\RemoveFirstOfficerRequirement</_PluginZipContentDirectory>
+      <_PluginZipPath>$(MSBuildProjectDirectory)\RemoveFirstOfficerRequirement.zip</_PluginZipPath>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(_PluginZipStagingDirectory)" />
+    <MakeDir Directories="$(_PluginZipContentDirectory)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(_PluginZipContentDirectory)" />
+    <ZipDirectory
+      SourceDirectory="$(_PluginZipStagingDirectory)"
+      DestinationFile="$(_PluginZipPath)"
+      Overwrite="true" />
+    <Message Importance="high" Text="Created plugin archive: $(_PluginZipPath)" />
+  </Target>
+
+</Project>
